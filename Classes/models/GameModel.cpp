@@ -3,7 +3,6 @@
 GameModel::GameModel() : _topCard(nullptr) {}
 GameModel::~GameModel() {}
 
-// 主牌区
 void GameModel::addPlayFieldCard(CardModel* card) { _playFieldCards.push_back(card); }
 void GameModel::removePlayFieldCard(int index) {
     if (index >= 0 && index < (int)_playFieldCards.size())
@@ -23,7 +22,6 @@ int GameModel::getPlayFieldCardIndex(CardModel* card) const {
     return -1;
 }
 
-// 堆牌区
 void GameModel::addStackCard(CardModel* card) { _stackCards.push_back(card); }
 void GameModel::removeStackCard(int index) {
     if (index >= 0 && index < (int)_stackCards.size())
@@ -46,7 +44,6 @@ int GameModel::getStackCardIndex(CardModel* card) const {
     return -1;
 }
 
-// 顶牌区
 void GameModel::setTopCard(CardModel* card) { _topCard = card; }
 
 void GameModel::clear() {

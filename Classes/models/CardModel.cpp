@@ -1,6 +1,6 @@
 #include "CardModel.h"
 
-int CardModel::_nextId = 1;
+int CardModel::_nextId = 1;  // 全局ID计数器初始化
 
 CardModel::CardModel(CardFace face, CardSuit suit, bool isOpen)
     : _id(_nextId++), _face(face), _suit(suit), _isOpen(isOpen) {
@@ -17,7 +17,5 @@ std::string CardModel::getFaceString() const {
 }
 
 cocos2d::Color3B CardModel::getColor() const {
-    return (_suit == SUIT_HEARTS || _suit == SUIT_DIAMONDS)
-        ? cocos2d::Color3B::RED
-        : cocos2d::Color3B::BLACK;
+    return (_suit == SUIT_HEARTS || _suit == SUIT_DIAMONDS) ? cocos2d::Color3B::RED : cocos2d::Color3B::BLACK;
 }

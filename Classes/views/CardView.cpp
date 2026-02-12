@@ -23,7 +23,7 @@ bool CardView::initWithModel(CardModel* model, CardSize size) {
     const float W = 140.0f, H = 196.0f;
     setContentSize(Size(W, H));
 
-    // 正面背景（card_back.png作为纹理）
+    // 正面背景（使用card_back.png作为纹理）
     _bgSprite = Sprite::create(getBackImagePath());
     if (_bgSprite) {
         float sx = W / _bgSprite->getContentSize().width;
@@ -34,7 +34,7 @@ bool CardView::initWithModel(CardModel* model, CardSize size) {
         addChild(_bgSprite);
     }
 
-    // 背面（与正面相同纹理，但分开控制）
+    // 背面精灵（同一纹理，单独控制可见性）
     _backSprite = Sprite::create(getBackImagePath());
     if (_backSprite) {
         float sx = W / _backSprite->getContentSize().width;
@@ -80,18 +80,19 @@ bool CardView::initWithModel(CardModel* model, CardSize size) {
         addChild(_suitSprite);
     }
 
+    // 触摸监听
     auto listener = EventListenerTouchOneByOne::create();
     listener->setSwallowTouches(true);
     listener->onTouchBegan = [this](Touch* t, Event*) {
         if (!_isClickable) return false;
         if (getBoundingBox().containsPoint(t->getLocation())) {
-            setScale(0.95f);
+            setScale(0.95f);  // 点击缩放反馈
             return true;
         }
         return false;
         };
     listener->onTouchEnded = [this](Touch*, Event*) {
-        setScale(1.0f);
+        setScale(1.0f);  // 恢复大小
         if (_clickCallback && _model) _clickCallback(_model);
         };
     _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
@@ -102,11 +103,11 @@ bool CardView::initWithModel(CardModel* model, CardSize size) {
 
 void CardView::updateView() {
     bool open = _model->isOpen();
-    if (_bgSprite) _bgSprite->setVisible(open);
+    _bgSprite->setVisible(open);
     if (_bigSprite) _bigSprite->setVisible(open);
     if (_smallSprite) _smallSprite->setVisible(open);
     if (_suitSprite) _suitSprite->setVisible(open);
-    if (_backSprite) _backSprite->setVisible(!open);
+    _backSprite->setVisible(!open);
     _isClickable = open;
 }
 
@@ -114,13 +115,11 @@ void CardView::setClickCallback(const std::function<void(CardModel*)>& cb) { _cl
 
 std::string CardView::getBigImagePath() const {
     if (!_model) return "";
-    return "cards/big_" + std::string(_model->getColor() == Color3B::RED ? "red_" : "black_")
-        + _model->getFaceString() + ".png";
+    return "cards/big_" + std::string(_model->getColor() == Color3B::RED ? "red_" : "black_") + _model->getFaceString() + ".png";
 }
 std::string CardView::getSmallImagePath() const {
     if (!_model) return "";
-    return "cards/small_" + std::string(_model->getColor() == Color3B::RED ? "red_" : "black_")
-        + _model->getFaceString() + ".png";
+    return "cards/small_" + std::string(_model->getColor() == Color3B::RED ? "red_" : "black_") + _model->getFaceString() + ".png";
 }
 std::string CardView::getSuitIconPath() const {
     if (!_model) return "";
